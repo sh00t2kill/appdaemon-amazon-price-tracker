@@ -8,7 +8,7 @@ python_packages:
 ```
 
 For each configured item, a sensor will be created using the name value, `sensor.name_of_item`
-if a below_threshold is set, a binary_sensor will be created, `binary_sensor.name_of_item_threshold`
+<br/>If a below_threshold is set, a binary_sensor will be created, `binary_sensor.name_of_item_threshold`
 
 Config:<br/>
 ```
