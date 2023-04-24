@@ -1,5 +1,12 @@
 # An appdaemon script for Home Assistant, to monitor and alert for price changes on the amazon shopping marketplace.
 
+Note: Requires requests and bs4 to be added to the required python packages
+```
+python_packages:
+    - bs4
+    - requests
+```
+
 Config:<br/>
 ```
 apt:
