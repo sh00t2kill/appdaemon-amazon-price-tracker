@@ -17,7 +17,7 @@ class APT(hass.Hass):
         for chunk in self.items:
             url = chunk['url']
             name = chunk['name']
-            threshold = chunk['below_threshold']
+            #threshold = chunk['below_threshold']
             self.log(f"Looking for {name} at {url}")
             page = requests.get(url,headers=self.header)
             if not page.ok: continue
@@ -34,8 +34,9 @@ class APT(hass.Hass):
             entity = "sensor.apt_" + name.replace(' ', '_').lower()
             self.log(f"Setting {entity} to {price}")
             self.set_state(entity, state=price, friendly_name=title, device_class="monetary", unit_of_measurement='$')
-            #self.log(clean(price, no_currency_symbols=True, replace_with_currency_symbol=""))
-            below_threshold = "off"
-            if float(price) < float(threshold):
-                below_threshold = "on"
-            self.set_state("binary_" + entity + "_threshold", state=below_threshold, friendly_name=title)
+            if "below_threshold" in chunk:
+                threshold = chunk['below_threshold']
+                below_threshold = "off"
+                if float(price) < float(threshold):
+                    below_threshold = "on"
+                self.set_state("binary_" + entity + "_threshold", state=below_threshold, friendly_name=title)
