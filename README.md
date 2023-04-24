@@ -1,1 +1,12 @@
-# appdaemon-amazon-price-tracker
+# An appdaemon script for Home Assistant, to monitor and alert for price changes on the amazon shopping marketplace.
+
+Config:<br/>
+```
+apt:
+  module: apt
+  class: APT
+  items:
+    - name: <Item friendly name>
+      url: "Full amazon.com link"
+      below_threshold: Price to trigger the binary sensor when it drops below
+```
