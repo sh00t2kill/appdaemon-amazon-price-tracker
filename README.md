@@ -7,6 +7,9 @@ python_packages:
     - requests
 ```
 
+For each configured item, a sensor will be created using the name value, `sensor.name_of_item`
+if a below_threshold is set, a binary_sensor will be created, `binary_sensor.name_of_item_threshold`
+
 Config:<br/>
 ```
 apt:
@@ -15,5 +18,5 @@ apt:
   items:
     - name: <Item friendly name>
       url: "Full amazon.com link"
-      below_threshold: Price to trigger the binary sensor when it drops below
+      below_threshold: Optional price value to trigger the binary sensor when it drops below
 ```
