@@ -47,5 +47,9 @@ class APT(hass.Hass):
                     binary_sensor_state = binary_sensor_entity.get_state()
                     if binary_sensor_state != below_threshold and self.notify_service:
                         self.log(f"The threshold {threshold} has been met for {title}. The binary_sensor is currently set to {binary_sensor_state}. Send an alert!")
-                        self.notify(message=f"{title} has gone below the threshold!", name=self.notify_service)
+                        data = {
+                            "url": url,
+                            "clickAction": url
+                        }
+                        self.notify(message=f"{title} has gone below the threshold!", data=data, name=self.notify_service)
                 self.set_state("binary_" + entity + "_threshold", state=below_threshold, friendly_name=title)
