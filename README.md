@@ -15,6 +15,7 @@ Config:<br/>
 apt:
   module: apt
   class: APT
+  notify: -- Optional. If set, and a threshold is set for an item, this service will be used to send a notification when an item drops below the threshold
   items:
     - name: <Item friendly name>
       url: "Full amazon.com link"
