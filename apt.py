@@ -9,6 +9,7 @@ class AmazonItem:
     title = False
     price = False
     threshold = False
+    name = False
 
     def set_price(self, price):
         self.price = price
@@ -24,6 +25,9 @@ class AmazonItem:
 
     def set_threshold(self, threshold):
         self.threshold = threshold
+
+    def set_name(self, name):
+        self.name = name
 
 class APT(hass.Hass):
 
@@ -70,11 +74,12 @@ class APT(hass.Hass):
 
     def get_prices(self, kwargs):
         for chunk in self.items:
-            url = chunk['url']
+            amazon_item = AmazonItem()
+            amazon_item.set_url(chunk['url'])
             name = chunk['name']
-            #threshold = chunk['below_threshold']
-            self.log(f"Looking for {name} at {url}")
-            page = requests.get(url,headers=self.header)
+            amazon_item.set_name(name)
+            self.log(f"Looking for {amazon_item.name} at {amazon_item.url}")
+            page = requests.get(amazon_item.url,headers=self.header)
             if not page.ok: continue
             soup = BeautifulSoup(page.content, "html.parser")
             page.close()
@@ -82,9 +87,11 @@ class APT(hass.Hass):
             title = self.find_title_in_page(soup)
             if not title:
                 continue
-
+            amazon_item.set_title(title)
             price = self.find_price_in_page(soup)
+            amazon_item.set_price(price)
             entity = "sensor.apt_" + name.replace(' ', '_').lower()
+            amazon_item.set_entity(entity)
             self.log(f"Setting {entity} to {price}")
             attributes = {
                 "LastUpdated":str(datetime.datetime.now()),
@@ -94,12 +101,7 @@ class APT(hass.Hass):
             self.set_state(entity, state=price, attributes=attributes)#friendly_name=title, device_class="monetary", unit_of_measurement='$')
             if "below_threshold" in chunk and price != "NA":
                 threshold = chunk['below_threshold']
-                amazon_item = AmazonItem()
-                amazon_item.set_price(price)
-                amazon_item.set_entity(entity)
                 amazon_item.set_threshold(threshold)
-                amazon_item.set_url(url)
-                amazon_item.set_title(title)
                 self.check_and_send_alert(amazon_item)
             elif price == "NA":
                 # Force binary sensor to off if no price/offer found
